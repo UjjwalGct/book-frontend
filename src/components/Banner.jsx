@@ -104,7 +104,7 @@ const Banner = ({ onSearch }) => {
     }
 
     try {
-      const res = await fetch(`http://localhost:5001/books?search=${query.trim()}`);
+      const res = await fetch(`https://book-backend-jade.vercel.app/books?search=${query.trim()}`);
       const text = await res.text();
       console.log("Raw response:", text);
 

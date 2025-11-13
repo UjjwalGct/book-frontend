@@ -193,7 +193,7 @@ const BookSearchAndRecommend = () => {
   useEffect(() => {
     const fetchAllBooks = async () => {
       try {
-        const res = await axios.get("http://localhost:5001/all-books");
+        const res = await axios.get("https://book-backend-jade.vercel.app/all-books");
         setAllBooks(res.data);
       } catch (err) {
         console.error("Error fetching all books:", err);
@@ -216,7 +216,7 @@ const BookSearchAndRecommend = () => {
 
     try {
       const res = await axios.get(
-        `http://localhost:5001/api/books/search?q=${query}`
+        `https://book-backend-jade.vercel.app/api/books/search?q=${query}`
       );
       setSuggestions(res.data);
     } catch (err) {

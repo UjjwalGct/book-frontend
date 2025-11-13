@@ -11,7 +11,7 @@ const BookDetails = () => {
   useEffect(() => {
     const fetchBook = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/books?search=${bookTitle}`);
+        const res = await fetch(`https://book-backend-jade.vercel.app/books?search=${bookTitle}`);
         const data = await res.json();
 
         if (res.ok) {
