@@ -183,13 +183,128 @@
 
 
 
+// import React, { useContext, useEffect, useState } from "react";
+// import { Link, useNavigate } from "react-router-dom";
+// import { AuthContext } from "../contects/AuthProvider";
+// import { FaBarsStaggered, FaXmark, FaBookOpenReader } from "react-icons/fa6";
+// import { HiLogout } from "react-icons/hi";
+// //import ThemeButton from "./ThemeButton";
+
+
+
+// const Navbar = () => {
+//   const [isMenuOpen, setIsMenuOpen] = useState(false);
+//   const [isSticky, setIsSticky] = useState(false);
+//   const { user, logout } = useContext(AuthContext);
+//   const navigate = useNavigate();
+
+//   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+//   useEffect(() => {
+//     const handleScroll = () => setIsSticky(window.scrollY > 80);
+//     window.addEventListener("scroll", handleScroll);
+//     return () => window.removeEventListener("scroll", handleScroll);
+//   }, []);
+
+//   const handleLogout = async () => {
+//     try {
+//       await logout();
+//       alert("✅ Logged out successfully!");
+//       navigate("/login");
+//     } catch (err) {
+//       console.error("Logout failed:", err);
+//       alert("⚠️ Something went wrong while logging out.");
+//     }
+//   };
+
+//   const navItems = [
+//     { link: "Home", path: "/" },
+//     { link: "About", path: "/about" },
+//     { link: "Shop", path: "/shop" },
+//     { link: "Sell Your Book", path: "/sell-your-book" },
+//   ];
+
+//   return (
+//     <header
+//       className={`w-full fixed top-0 left-0 z-50 transition-all duration-300 
+//       ${isSticky ? "bg-white dark:bg-gray-900 shadow-md" : "bg-white dark:bg-gray-900"}`}
+//     >
+//       <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
+//         {/* ✅ Logo */}
+//         <Link
+//           to="/"
+//           className="text-2xl font-bold flex items-center gap-2 text-blue-700 dark:text-blue-400"
+//         >
+//           <FaBookOpenReader className="text-blue-700 dark:text-blue-400" />
+//           <span>BookStore</span>
+//         </Link>
+
+//         {/* ✅ Desktop Menu */}
+//         <ul className="hidden lg:flex items-center space-x-8 text-base font-medium">
+//           {navItems.map(({ link, path }) => (
+//             <li key={path}>
+//               <Link
+//                 to={path}
+//                 className="text-gray-700 dark:text-gray-200 hover:text-blue-700 dark:hover:text-blue-400 transition-colors duration-200"
+//               >
+//                 {link}
+//               </Link>
+//             </li>
+//           ))}
+
+//           {/* ✅ Theme Toggle */}
+//           {/* <ThemeButton /> */}
+
+//           {/* ✅ Auth Section */}
+//           {user ? (
+//             <>
+//               <span className="text-gray-600 dark:text-gray-300 font-semibold">
+//                 Hi, {user.displayName || user.email}
+//               </span>
+//               <button
+//                 onClick={handleLogout}
+//                 className="flex items-center gap-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+//               >
+//                 <HiLogout /> Logout
+//               </button>
+//             </>
+//           ) : (
+//             <Link
+//               to="/login"
+//               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+//             >
+//               Login
+//             </Link>
+//           )}
+//         </ul>
+
+//         {/* ✅ Mobile Toggle Button */}
+//         <button
+//           onClick={toggleMenu}
+//           className="lg:hidden text-gray-800 dark:text-gray-200 focus:outline-none"
+//         >
+//           {isMenuOpen ? (
+//             <FaXmark className="w-6 h-6" />
+//           ) : (
+//             <FaBarsStaggered className="w-6 h-6" />
+//           )}
+//         </button>
+//       </nav>
+//     </header>
+//   );
+// };
+
+// export default Navbar;
+
+
+
+
+
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contects/AuthProvider";
 import { FaBarsStaggered, FaXmark, FaBookOpenReader } from "react-icons/fa6";
 import { HiLogout } from "react-icons/hi";
-//import ThemeButton from "./ThemeButton";
-
 
 
 const Navbar = () => {
@@ -222,12 +337,16 @@ const Navbar = () => {
     { link: "About", path: "/about" },
     { link: "Shop", path: "/shop" },
     { link: "Sell Your Book", path: "/sell-your-book" },
+    { link: "Contact", path: "/contact" },
+    
+
   ];
 
   return (
     <header
-      className={`w-full fixed top-0 left-0 z-50 transition-all duration-300 
-      ${isSticky ? "bg-white dark:bg-gray-900 shadow-md" : "bg-white dark:bg-gray-900"}`}
+      className={`w-full fixed top-0 left-0 z-50 transition-all duration-300 ${
+        isSticky ? "bg-white dark:bg-gray-900 shadow-md" : "bg-white dark:bg-gray-900"
+      }`}
     >
       <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
         {/* ✅ Logo */}
@@ -252,10 +371,6 @@ const Navbar = () => {
             </li>
           ))}
 
-          {/* ✅ Theme Toggle */}
-          {/* <ThemeButton /> */}
-
-          {/* ✅ Auth Section */}
           {user ? (
             <>
               <span className="text-gray-600 dark:text-gray-300 font-semibold">
@@ -281,15 +396,50 @@ const Navbar = () => {
         {/* ✅ Mobile Toggle Button */}
         <button
           onClick={toggleMenu}
-          className="lg:hidden text-gray-800 dark:text-gray-200 focus:outline-none"
+          className="lg:hidden text-gray-800 dark:text-gray-200 focus:outline-none absolute right-5 top-4"
         >
-          {isMenuOpen ? (
-            <FaXmark className="w-6 h-6" />
-          ) : (
-            <FaBarsStaggered className="w-6 h-6" />
-          )}
+          {isMenuOpen ? <FaXmark className="w-6 h-6" /> : <FaBarsStaggered className="w-6 h-6" />}
         </button>
       </nav>
+
+      {/* ✅ Mobile Menu */}
+      {isMenuOpen && (
+        <div className="lg:hidden bg-white dark:bg-gray-900 shadow-md px-6 py-4">
+          <ul className="flex flex-col space-y-4 text-base font-medium">
+            {navItems.map(({ link, path }) => (
+              <li key={path}>
+                <Link
+                  to={path}
+                  onClick={() => setIsMenuOpen(false)} // Close menu on click
+                  className="block text-gray-700 dark:text-gray-200 hover:text-blue-700 dark:hover:text-blue-400 transition-colors duration-200"
+                >
+                  {link}
+                </Link>
+              </li>
+            ))}
+
+            {user ? (
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsMenuOpen(false);
+                }}
+                className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+              >
+                <HiLogout /> Logout
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setIsMenuOpen(false)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition text-center"
+              >
+                Login
+              </Link>
+            )}
+          </ul>
+        </div>
+      )}
     </header>
   );
 };

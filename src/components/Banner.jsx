@@ -16,200 +16,263 @@ const Banner = ({ onSearch }) => {
 
   //type 2 voice search
 
-  const handleVoiceSearch = () => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
+  // const handleVoiceSearch = () => {
+  //   const SpeechRecognition =
+  //     window.SpeechRecognition || window.webkitSpeechRecognition;
 
-    if (!SpeechRecognition) {
-      alert("Your browser does not support speech recognition. Please use Chrome or Edge.");
-      return;
-    }
+  //   if (!SpeechRecognition) {
+  //     alert("Your browser does not support speech recognition. Please use Chrome or Edge.");
+  //     return;
+  //   }
 
-    const recognition = new SpeechRecognition();
-    recognition.lang = "en-IN";
-    recognition.interimResults = false;
-    recognition.continuous = false;
+  //   const recognition = new SpeechRecognition();
+  //   recognition.lang = "en-IN";
+  //   recognition.interimResults = false;
+  //   recognition.continuous = false;
 
-    // 🎙️ Mic starts listening — show animation
-    recognition.onstart = () => {
-      console.log("🎤 Voice recognition started...");
-      setIsListening(true); // <-- for animation
-    };
+  //   // 🎙️ Mic starts listening — show animation
+  //   recognition.onstart = () => {
+  //     console.log("🎤 Voice recognition started...");
+  //     setIsListening(true); // <-- for animation
+  //   };
 
-    // 🛑 Mic stops listening — remove animation
-    recognition.onend = () => {
-      console.log("🛑 Voice recognition stopped.");
-      setIsListening(false);
-    };
+  //   // 🛑 Mic stops listening — remove animation
+  //   recognition.onend = () => {
+  //     console.log("🛑 Voice recognition stopped.");
+  //     setIsListening(false);
+  //   };
 
-    // ✅ Get speech result and trigger search
-    recognition.onresult = (event) => {
-      const voiceQuery = event.results[0][0].transcript;
-      console.log("You said:", voiceQuery);
+  //   // ✅ Get speech result and trigger search
+  //   recognition.onresult = (event) => {
+  //     const voiceQuery = event.results[0][0].transcript;
+  //     console.log("You said:", voiceQuery);
 
-      setQuery(voiceQuery); // update input box
-      handleSearch(voiceQuery); // trigger search
-    };
+  //     setQuery(voiceQuery); // update input box
+  //     handleSearch(voiceQuery); // trigger search
+  //   };
 
-    // 🚀 Start listening
-    recognition.start();
+  //   // 🚀 Start listening
+  //   recognition.start();
+  // };
+
+
+
+  //type 3
+  //   const handleVoiceSearch = () => {
+  //   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  //   if (!SpeechRecognition) {
+  //     alert("Your browser does not support speech recognition. Please use Chrome or Edge.");
+  //     return;
+  //   }
+
+  //   const recognition = new SpeechRecognition();
+  //   recognition.lang = "en-IN";
+
+  //   recognition.onstart = () => {
+  //     console.log("🎤 Voice recognition started...");
+  //   };
+
+  //   recognition.onresult = (event) => {
+  //     const voiceQuery = event.results[0][0].transcript;
+  //     console.log("You said:", voiceQuery);
+  //     setQuery(voiceQuery);
+  //     handleSearch(voiceQuery); // ✅ Automatically search from voice
+  //   };
+
+  //   recognition.onerror = (event) => {
+  //     console.error("Voice recognition error:", event.error);
+  //     alert("Error using voice input. Please try again.");
+  //   };
+
+  //   recognition.onend = () => {
+  //     console.log("🎤 Voice recognition ended.");
+  //   };
+
+  //   recognition.start();
+  // };
+
+
+
+//handle voice search 
+const handleVoiceSearch = () => {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Your browser does not support speech recognition. Please use Chrome or Edge.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-IN";
+  recognition.interimResults = false;
+  recognition.continuous = false;
+
+  recognition.onstart = () => setIsListening(true);
+  recognition.onend = () => setIsListening(false);
+
+  recognition.onresult = (event) => {
+    const voiceQuery = event.results[0][0].transcript;
+    console.log("🎤 You said:", voiceQuery);
+    setQuery(voiceQuery);
+    handleSearch(voiceQuery); // ✅ automatically trigger search
   };
 
+  recognition.start();
+};
 
-//   const handleVoiceSearch = () => {
-//   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-//   if (!SpeechRecognition) {
-//     alert("Your browser does not support speech recognition. Please use Chrome or Edge.");
-//     return;
-//   }
 
-//   const recognition = new SpeechRecognition();
-//   recognition.lang = "en-IN";
 
-//   recognition.onstart = () => {
-//     console.log("🎤 Voice recognition started...");
-//   };
 
-//   recognition.onresult = (event) => {
-//     const voiceQuery = event.results[0][0].transcript;
-//     console.log("You said:", voiceQuery);
-//     setQuery(voiceQuery);
-//     handleSearch(voiceQuery); // ✅ Automatically search from voice
-//   };
 
-//   recognition.onerror = (event) => {
-//     console.error("Voice recognition error:", event.error);
-//     alert("Error using voice input. Please try again.");
-//   };
 
-//   recognition.onend = () => {
-//     console.log("🎤 Voice recognition ended.");
-//   };
 
-//   recognition.start();
-// };
+
+
+  //type 4 handle search
+
+  const navigate = useNavigate();
+
+  const handleSearch = async (voiceQuery) => {
+  const searchTerm = String(voiceQuery || query).trim(); // Use voice or typed input
+
+  if (!searchTerm) {
+    alert("Please enter or speak a book name to search.");
+    return;
+  }
+
+  try {
+    // 🔁 Works for both local and deployed backends
+    const backendURL =
+      window.location.hostname === "localhost"
+        ? "http://localhost:5001"
+        : "https://book-backend-jade.vercel.app";
+
+    const res = await fetch(`${backendURL}/books?search=${encodeURIComponent(searchTerm)}`);
+
+    // ✅ Check for invalid response
+    if (!res.ok) {
+      throw new Error(`Server error: ${res.status}`);
+    }
+
+    const data = await res.json();
+    console.log("Fetched data:", data);
+
+    // ✅ If backend returns an array
+    if (Array.isArray(data) && data.length > 0) {
+      const book = data[0]; // take first match
+      navigate(`/book/${encodeURIComponent(book.bookTitle)}`);
+    } else if (data && data.bookTitle) {
+      navigate(`/book/${encodeURIComponent(data.bookTitle)}`);
+    } else {
+      alert(`No book found for "${searchTerm}"`);
+    }
+  } catch (error) {
+    console.error("Error fetching books:", error);
+    alert("Something went wrong while searching. Please try again.");
+  }
+};
 
 
 
   //handle text search
 
-  const navigate = useNavigate(); // ✅ initialize
+   // ✅ initialize
 
-  const handleSearch = async () => {
-    
-    if (query.trim() === "") {
-      alert("Please enter a book name to search.");
-      return;
-    }
+  // const handleSearch = async () => {
 
-    try {
-      const res = await fetch(`https://book-backend-jade.vercel.app/books?search=${query.trim()}`);
-      const text = await res.text();
-      console.log("Raw response:", text);
+  //   if (query.trim() === "") {
+  //     alert("Please enter a book name to search.");
+  //     return;
+  //   }
 
-      const data = JSON.parse(text);
+  //   try {
+  //     const res = await fetch(`https://book-backend-jade.vercel.app/books?search=${query.trim()}`);
+  //     const text = await res.text();
+  //     console.log("Raw response:", text);
 
-      // ✅ Navigate using book title (not _id)
-      if (data && data.bookTitle) {
-        navigate(`/book/${encodeURIComponent(data.bookTitle)}`);
-      } else {
-        alert("No book found with that title!");
-      }
-    } catch (error) {
-      console.error("Error fetching books:", error);
-      alert("Something went wrong while searching. Please try again.");
-    }
-  };
+  //     const data = JSON.parse(text);
 
-
-
-// const handleSearch = async (voiceQuery) => {
-//   const searchTerm = voiceQuery || query.trim(); // use voice input if available
-
-//   if (searchTerm === "") {
-//     alert("Please enter a book name to search.");
-//     return;
-//   }
-
-//   try {
-//     const res = await fetch(`http://localhost:5001/books?search=${searchTerm}`);
-//     const text = await res.text();
-//     console.log("Raw response:", text);
-
-//     const data = JSON.parse(text);
-
-//     if (data && data.bookTitle) {
-//       navigate(`/book/${encodeURIComponent(data.bookTitle)}`);
-//     } else {
-//       alert("No book found with that title!");
-//     }
-//   } catch (error) {
-//     console.error("Error fetching books:", error);
-//     alert("Something went wrong while searching. Please try again.");
-//   }
-// };
+  //     // ✅ Navigate using book title (not _id)
+  //     if (data && data.bookTitle) {
+  //       navigate(`/book/${encodeURIComponent(data.bookTitle)}`);
+  //     } else {
+  //       alert("No book found with that title!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching books:", error);
+  //     alert("Something went wrong while searching. Please try again.");
+  //   }
+  // };
 
 
 
+  // const handleSearch = async (voiceQuery) => {
+  //   const searchTerm = voiceQuery || query.trim(); // use voice input if available
 
-//type 3
+  //   if (searchTerm === "") {
+  //     alert("Please enter a book name to search.");
+  //     return;
+  //   }
 
-// const handleSearch = async (voiceQuery) => {
-//   // ✅ Convert to string safely to avoid .trim() errors
-//   const rawSearch = voiceQuery !== undefined ? voiceQuery : query;
-//   const searchTerm = String(rawSearch || "").trim();
+  //   try {
+  //     const res = await fetch(`http://localhost:5001/books?search=${searchTerm}`);
+  //     const text = await res.text();
+  //     console.log("Raw response:", text);
 
-//   if (!searchTerm) {
-//     alert("Please enter or speak a book name to search.");
-//     return;
-//   }
+  //     const data = JSON.parse(text);
 
-//   try {
-//     const res = await fetch(`http://localhost:5001/books?search=${encodeURIComponent(searchTerm)}`);
-//     const text = await res.text();
-//     console.log("Raw response:", text);
-
-//     const data = JSON.parse(text);
-
-//     if (data && data.bookTitle) {
-//       navigate(`/book/${encodeURIComponent(data.bookTitle)}`);
-//     } else {
-//       alert(`No book found with title: ${searchTerm}`);
-//     }
-//   } catch (error) {
-//     console.error("Error fetching books:", error);
-//     alert("Something went wrong while searching. Please try again.");
-//   }
-// };
+  //     if (data && data.bookTitle) {
+  //       navigate(`/book/${encodeURIComponent(data.bookTitle)}`);
+  //     } else {
+  //       alert("No book found with that title!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching books:", error);
+  //     alert("Something went wrong while searching. Please try again.");
+  //   }
+  // };
 
 
 
 
-//background
+  //type 3
 
-      {/* <div className="absolute inset-0">
-  <img
-    src="/assets/hero-bg-tech-DqFzoj5o.jpg"
-    alt="Software services background"
-    className="w-full h-full object-cover"
-  />
-  
-  <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/90 to-white/95 dark:from-background/90 dark:via-background/80 dark:to-background/90"></div>
-  
-  <div className="absolute inset-0 opacity-20 dark:opacity-30">
-    <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/30 rounded-full blur-3xl animate-float"></div>
-    <div
-      className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/30 rounded-full blur-3xl animate-float"
-      style={{ animationDelay: "2s" }}
-    ></div>
-  </div>
-</div> */}
+  // const handleSearch = async (voiceQuery) => {
+  //   // ✅ Convert to string safely to avoid .trim() errors
+  //   const rawSearch = voiceQuery !== undefined ? voiceQuery : query;
+  //   const searchTerm = String(rawSearch || "").trim();
+
+  //   if (!searchTerm) {
+  //     alert("Please enter or speak a book name to search.");
+  //     return;
+  //   }
+
+  //   try {
+  //     const res = await fetch(`http://localhost:5001/books?search=${encodeURIComponent(searchTerm)}`);
+  //     const text = await res.text();
+  //     console.log("Raw response:", text);
+
+  //     const data = JSON.parse(text);
+
+  //     if (data && data.bookTitle) {
+  //       navigate(`/book/${encodeURIComponent(data.bookTitle)}`);
+  //     } else {
+  //       alert(`No book found with title: ${searchTerm}`);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching books:", error);
+  //     alert("Something went wrong while searching. Please try again.");
+  //   }
+  // };
 
 
-  // ✅ UI
 
-  
+
+
+
   return (
     <div className="bg-gradient-to-r from-teal-100 via-white to-blue-100 px-4 sm:px-8 md:px-12 lg:px-24 py-16 sm:py-20 md:py-24 flex flex-col md:flex-row justify-between items-center gap-10 overflow-hidden">
 
@@ -288,27 +351,16 @@ const Banner = ({ onSearch }) => {
       </div>
 
       {/* Right Section */}
-      <motion.div
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.4, duration: 0.8 }}
-        className="md:w-1/2 w-full flex justify-center"
-      >
+
+      <motion.div className="md:w-1/2 w-full flex justify-center">
         <div className="w-4/5 sm:w-3/5 md:w-full max-w-sm md:max-w-lg">
           <BannerCard />
         </div>
       </motion.div>
+
     </div>
+  );
 
-
-
-
-
-
-
-
-          );
-  
 };
 
 export default Banner;

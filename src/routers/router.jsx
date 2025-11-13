@@ -193,6 +193,7 @@ import Login from "../components/Login";
 import PrivateRoute from "../PrivateRoute/PrivateRoute";
 import AdminRoute from "../PrivateRoute/AdminRoute";
 import BookDetails from "../components/BookDetails";
+import Contact from "../home/Contact";
 import BookSearchAndRecommend from "../components/BookSearchAndRecommend";
 
 const router = createBrowserRouter([
@@ -204,6 +205,7 @@ const router = createBrowserRouter([
       { path: "home", element: <Home /> },
       { path: "shop", element: <Shop /> },
       { path: "about", element: <About /> },
+      { path: "contact", element: <Contact /> },
       { path: "/search", element: <BookSearchAndRecommend /> },
       {
         path: "/book/:bookTitle",
