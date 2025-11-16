@@ -1,5 +1,4 @@
 
-
 import React, { useContext, useState } from "react";
 import {
   HiOutlineMenu,
@@ -19,9 +18,6 @@ import { Sidebar } from "flowbite-react";
 import { AuthContext } from "../contects/AuthProvider";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import userImg from "../assets/profile.jpg";
-
-
-
 const SideBar = () => {
   const { user } = useContext(AuthContext) || {};
   const { logout } = useContext(AuthContext);
@@ -39,16 +35,7 @@ const SideBar = () => {
       alert("⚠️ Something went wrong while logging out.");
     }
   };
-
   const isActive = (path) => location.pathname === path;
-
-
-
-
-
-
-  
-
 const handleDashboardClick = (e) => {
     e.preventDefault(); // stop default link navigation first
 
@@ -66,7 +53,6 @@ const handleDashboardClick = (e) => {
     // if admin -> navigate to dashboard
     navigate("/admin/dashboard");
   };
-
 
   return (
     <>
@@ -216,4 +202,23 @@ const handleDashboardClick = (e) => {
   );
 };
 
+
 export default SideBar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
